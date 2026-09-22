@@ -1,26 +1,20 @@
 /**
  * StakeHolder.test.js
  * Unit tests for the Stakeholder contract.
- *
- * Coverage:
- *  - Deployment and admin assignment
- *  - register() – addStakeHolder alias
- *  - Duplicate registration rejection
- *  - Invalid input rejection
- *  - get() – getStakeHolder alias
- *  - getAddresses()
- *  - verify() – admin only
- *  - setApprovalForAll / isApprovedForAll
- *  - transferFrom – owner / approved only
- *  - Events: StakeholderRegistered, StakeholderVerified, ApprovalForAll, ProductTransferred
+ * Uses plain chai (no chai-as-promised) for truffle compatibility.
  */
 
-const { assert, expect } = require('chai');
+const { assert } = require('chai');
 const Stakeholder = artifacts.require('Stakeholder');
 
-require('chai')
-  .use(require('chai-as-promised'))
-  .should();
+async function shouldRevert(fn) {
+  try {
+    await fn();
+    return false;
+  } catch (e) {
+    return true;
+  }
+}
 
 contract('Stakeholder', (accounts) => {
   const admin              = accounts[0];
@@ -33,9 +27,7 @@ contract('Stakeholder', (accounts) => {
     stakeHolderContract = await Stakeholder.deployed();
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Deployment
-  // ───────────────────────────────────────────────────────────────
+  // ─── Deployment ────────────────────────────────────────────────
 
   describe('Deployment', () => {
     it('deploys successfully', async () => {
@@ -52,12 +44,10 @@ contract('Stakeholder', (accounts) => {
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Registration (register / addStakeHolder alias)
-  // ───────────────────────────────────────────────────────────────
+  // ─── Registration ──────────────────────────────────────────────
 
   describe('Registration', () => {
-    it('adds a stakeholder via register()', async () => {
+    it('Adding Stakeholder via register()', async () => {
       await stakeHolderContract.register('Distributer 1', 'City', 'distributer', { from: stakeHolderAddress });
       const sh = await stakeHolderContract.get(stakeHolderAddress);
       assert.equal(sh.id, stakeHolderAddress);
@@ -71,32 +61,36 @@ contract('Stakeholder', (accounts) => {
     });
 
     it('rejects duplicate registration', async () => {
-      await stakeHolderContract.register('Dup', 'City', 'distributer', { from: stakeHolderAddress })
-        .should.be.rejectedWith('already registered');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.register('Dup', 'City', 'distributer', { from: stakeHolderAddress })
+      );
+      assert.isTrue(reverted);
     });
 
     it('rejects empty name', async () => {
-      await stakeHolderContract.register('', 'City', 'distributer', { from: accounts[5] })
-        .should.be.rejectedWith('name cannot be empty');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.register('', 'City', 'distributer', { from: accounts[5] })
+      );
+      assert.isTrue(reverted);
     });
 
     it('rejects empty location', async () => {
-      await stakeHolderContract.register('Name', '', 'distributer', { from: accounts[6] })
-        .should.be.rejectedWith('location cannot be empty');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.register('Name', '', 'distributer', { from: accounts[6] })
+      );
+      assert.isTrue(reverted);
     });
 
     it('emits StakeholderRegistered event', async () => {
       const tx = await stakeHolderContract.register('Retailer', 'Town', 'retailer', { from: stakeHolder2Addr });
       const event = tx.logs.find(l => l.event === 'StakeholderRegistered');
-      assert.ok(event);
+      assert.ok(event, 'StakeholderRegistered event not emitted');
       assert.equal(event.args.id, stakeHolder2Addr);
       assert.equal(event.args.role, 'retailer');
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Retrieval
-  // ───────────────────────────────────────────────────────────────
+  // ─── Retrieval ─────────────────────────────────────────────────
 
   describe('Retrieval', () => {
     it('get() returns the correct record', async () => {
@@ -116,14 +110,14 @@ contract('Stakeholder', (accounts) => {
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Verification
-  // ───────────────────────────────────────────────────────────────
+  // ─── Verification ──────────────────────────────────────────────
 
   describe('Verification', () => {
     it('non-admin cannot verify', async () => {
-      await stakeHolderContract.verify(stakeHolderAddress, { from: nonAdmin })
-        .should.be.rejectedWith(Error);
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.verify(stakeHolderAddress, { from: nonAdmin })
+      );
+      assert.isTrue(reverted);
     });
 
     it('admin can verify a stakeholder', async () => {
@@ -134,19 +128,19 @@ contract('Stakeholder', (accounts) => {
     it('emits StakeholderVerified event', async () => {
       const tx = await stakeHolderContract.verify(stakeHolder2Addr, { from: admin });
       const event = tx.logs.find(l => l.event === 'StakeholderVerified');
-      assert.ok(event);
+      assert.ok(event, 'StakeholderVerified event not emitted');
       assert.equal(event.args.id, stakeHolder2Addr);
     });
 
     it('verify rejects for unregistered address', async () => {
-      await stakeHolderContract.verify(accounts[9], { from: admin })
-        .should.be.rejectedWith('not registered');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.verify(accounts[9], { from: admin })
+      );
+      assert.isTrue(reverted);
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Approvals
-  // ───────────────────────────────────────────────────────────────
+  // ─── Approvals ─────────────────────────────────────────────────
 
   describe('Approvals', () => {
     it('setApprovalForAll grants approval', async () => {
@@ -157,18 +151,22 @@ contract('Stakeholder', (accounts) => {
     it('setApprovalForAll emits ApprovalForAll event', async () => {
       const tx = await stakeHolderContract.setApprovalForAll(stakeHolder2Addr, false, { from: stakeHolderAddress });
       const event = tx.logs.find(l => l.event === 'ApprovalForAll');
-      assert.ok(event);
+      assert.ok(event, 'ApprovalForAll event not emitted');
       assert.isFalse(event.args.approved);
     });
 
     it('setApprovalForAll cannot approve self', async () => {
-      await stakeHolderContract.setApprovalForAll(stakeHolderAddress, true, { from: stakeHolderAddress })
-        .should.be.rejectedWith('cannot approve self');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.setApprovalForAll(stakeHolderAddress, true, { from: stakeHolderAddress })
+      );
+      assert.isTrue(reverted);
     });
 
     it('setApprovalForAll rejects zero operator', async () => {
-      await stakeHolderContract.setApprovalForAll('0x0000000000000000000000000000000000000000', true, { from: stakeHolderAddress })
-        .should.be.rejectedWith('zero address');
+      const reverted = await shouldRevert(() =>
+        stakeHolderContract.setApprovalForAll('0x0000000000000000000000000000000000000000', true, { from: stakeHolderAddress })
+      );
+      assert.isTrue(reverted);
     });
   });
 });

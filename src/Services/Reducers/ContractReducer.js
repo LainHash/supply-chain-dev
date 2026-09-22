@@ -60,5 +60,7 @@ export const contractReducer = (state, action) => {
         ...state,
         stats: action.payload.stats
       }
+    default:
+      return state;
   }
 }

@@ -33,7 +33,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -46,7 +47,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -59,7 +61,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -78,7 +81,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract Farmer\",\"name\":\"_farmer\",\"type\":\"address\"},{\"internalType\":\"contract Manufacturer\",\"name\":\"_manufacturer\",\"type\":\"address\"},{\"internalType\":\"contract Stakeholder\",\"name\":\"_stakeholder\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"farmer\",\"outputs\":[{\"internalType\":\"contract Farmer\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_id\",\"type\":\"address\"}],\"name\":\"getRole\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"manufacturer\",\"outputs\":[{\"internalType\":\"contract Manufacturer\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"stakeholder\",\"outputs\":[{\"internalType\":\"contract Stakeholder\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/Contracts/Main.sol\":\"Main\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/Contracts/Admin.sol\":{\"keccak256\":\"0xb966a2f85ecc3af74c3b3aafa143c5ed60b40bcf2a24f7217a84ffa390733df1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://222ef9e309c6ed2d03c29625941dc352d90cc68765cd44133de802de8f1484ae\",\"dweb:/ipfs/QmVtrjze1w8KzCEoko39KiyyxgmRKHMz5WHu3Yadt2wu7a\"]},\"project:/Contracts/Farmer.sol\":{\"keccak256\":\"0x2e844696b5fd799da8f68407b4023a0d0b7e701d518cadc3163d2e465608499e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1f1c3386aec22375c749012ce675d11fb8d584f28d3a221b199e533725ef2a0\",\"dweb:/ipfs/QmbpF88NwoMQJtCaSAY6oxmbr2voPczDKrV9FFjJYpfSoc\"]},\"project:/Contracts/Main.sol\":{\"keccak256\":\"0xa5866262b4df5d826fe6414f32f592e2e619eabbfa4da99d2257d6b87ffaa02b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://624e83de82798b2848b6bb1311ccbd2f29da31c65a072844d9dd4040be66dce3\",\"dweb:/ipfs/QmYgFHfM1M4DucBg1p6YvdBtVBwxgTbGQPdqQpHEUh71dy\"]},\"project:/Contracts/Manufacturer.sol\":{\"keccak256\":\"0x2cdd5b999b21ea2490ff07c6a2e9599430bc000d4909e6790a0522e86c8a2dc3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5cd9a8c64d39d560b2dbb96f2210646dc2dc83f3eee4793c5c80737ab921a48f\",\"dweb:/ipfs/QmTQNdMjPvrPocThjzoWSDB3hQkHgRpDFUVQc7PY1WjnTc\"]},\"project:/Contracts/Product.sol\":{\"keccak256\":\"0xaab10c9a584f5df38c58ff7fecb0e6895bcfe5cfd45e41a73c8f1dd4b2b043db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://71b6d8cc229f21bac3ccd50fff5f20ba8a69d7dfd2a37fae2c2cc0be1eb10629\",\"dweb:/ipfs/QmQnptRdPheTkrZFHDeGXGhvZ7CMAtJajbScEzDbUJjrKC\"]},\"project:/Contracts/Stakeholder.sol\":{\"keccak256\":\"0x1f27c432f6bf75b45e7e631a0252710f1bf179ec9f60eafc885eb5e4af1b8767\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://dc97cda496d7a2d80bdfd65f1636caa9675a3eecd4db607ac0ca5fc5368fa0d7\",\"dweb:/ipfs/QmeZdMi4btrgqD2VRauTcekkerUCttjGfRY7kt3MmyxfbZ\"]}},\"version\":1}",
@@ -7525,15 +7529,28 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0xFC628dd79137395F3C9744e33b1c5DE554D94882",
+      "transactionHash": "0xef15886553d335671afac99b2239e17fc982a5fb8d9d5dbb4c2e3b1bd8e63fc6"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x7bE78b464EFb1827EC784Bc514dE2c3781feA2Bd",
-      "transactionHash": "0x3a8150e023aa7d71b1e5a2b9085746d209490bf82bda71f7532c01a4c403c11c"
+      "address": "0xFC628dd79137395F3C9744e33b1c5DE554D94882",
+      "transactionHash": "0xef15886553d335671afac99b2239e17fc982a5fb8d9d5dbb4c2e3b1bd8e63fc6"
+    },
+    "1790045722949": {
+      "events": {},
+      "links": {},
+      "address": "0xFC628dd79137395F3C9744e33b1c5DE554D94882",
+      "transactionHash": "0xef15886553d335671afac99b2239e17fc982a5fb8d9d5dbb4c2e3b1bd8e63fc6"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T02:54:59.451Z",
+  "updatedAt": "2026-09-22T03:04:30.200Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

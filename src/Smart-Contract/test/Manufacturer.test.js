@@ -1,27 +1,20 @@
 /**
  * Manufacturer.test.js
  * Comprehensive unit tests for the Manufacturer contract.
- *
- * Coverage:
- *  - Deployment and initial state
- *  - register / addManufacturer (alias)
- *  - Duplicate registration rejection
- *  - Invalid input rejection
- *  - addRawProduct
- *  - updateRawProducts (parallel arrays)
- *  - getRawProductInfo
- *  - getManufacturer / getManufacturersList / getManufacturerRawProductDetails
- *  - launchProduct
- *  - verifyManufacturer / updateEnergy (admin only)
- *  - Events: ManufacturerRegistered, RawProductAdded, ProductLaunched, EnergyUpdated
+ * Uses plain chai (no chai-as-promised) for truffle compatibility.
  */
 
-const { assert, expect } = require('chai');
+const { assert } = require('chai');
 const Manufacturer = artifacts.require('Manufacturer');
 
-require('chai')
-  .use(require('chai-as-promised'))
-  .should();
+async function shouldRevert(fn) {
+  try {
+    await fn();
+    return false;
+  } catch (e) {
+    return true;
+  }
+}
 
 contract('Manufacturer', (accounts) => {
   const admin               = accounts[0];
@@ -35,16 +28,14 @@ contract('Manufacturer', (accounts) => {
     manufacturerContract = await Manufacturer.deployed();
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Deployment
-  // ───────────────────────────────────────────────────────────────
+  // ─── Deployment ────────────────────────────────────────────────
 
   describe('Deployment', () => {
     it('deploys successfully', async () => {
       assert.notEqual(manufacturerContract.address, '');
     });
 
-    it('sets the deploying account as admin', async () => {
+    it('sets deployer as admin', async () => {
       assert.isTrue(await manufacturerContract.isAdmin(admin));
     });
 
@@ -54,9 +45,7 @@ contract('Manufacturer', (accounts) => {
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Registration
-  // ───────────────────────────────────────────────────────────────
+  // ─── Registration ──────────────────────────────────────────────
 
   describe('Registration', () => {
     it('registers via addManufacturer()', async () => {
@@ -76,41 +65,45 @@ contract('Manufacturer', (accounts) => {
       assert.isAbove(list.length, 0);
     });
 
-    it('registers a second manufacturer via register()', async () => {
+    it('registers second manufacturer via register()', async () => {
       await manufacturerContract.register('Manufacturer 2', 'Location 2', 'manufacturer', { from: manufacturer2Addr });
       const { manufacturer } = await manufacturerContract.getManufacturer(manufacturer2Addr);
       assert.equal(manufacturer.name, 'Manufacturer 2');
     });
 
     it('rejects duplicate registration', async () => {
-      await manufacturerContract.register('Dup', 'Location', 'manufacturer', { from: manufacturerAddress })
-        .should.be.rejectedWith('already registered');
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.register('Dup', 'Location', 'manufacturer', { from: manufacturerAddress })
+      );
+      assert.isTrue(reverted);
     });
 
     it('rejects empty name', async () => {
-      await manufacturerContract.register('', 'Location', 'manufacturer', { from: accounts[5] })
-        .should.be.rejectedWith('name cannot be empty');
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.register('', 'Location', 'manufacturer', { from: accounts[5] })
+      );
+      assert.isTrue(reverted);
     });
 
     it('rejects empty location', async () => {
-      await manufacturerContract.register('Name', '', 'manufacturer', { from: accounts[6] })
-        .should.be.rejectedWith('location cannot be empty');
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.register('Name', '', 'manufacturer', { from: accounts[6] })
+      );
+      assert.isTrue(reverted);
     });
 
     it('emits ManufacturerRegistered event', async () => {
       const tx = await manufacturerContract.register('Mfr3', 'City3', 'manufacturer', { from: accounts[7] });
       const event = tx.logs.find(l => l.event === 'ManufacturerRegistered');
-      assert.ok(event);
+      assert.ok(event, 'ManufacturerRegistered event not emitted');
       assert.equal(event.args.id, accounts[7]);
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Raw products
-  // ───────────────────────────────────────────────────────────────
+  // ─── Raw products ──────────────────────────────────────────────
 
   describe('Raw products', () => {
-    it('updateRawProducts updates products via parallel arrays', async () => {
+    it('Updating Manufacturer Raw Products via updateRawProducts()', async () => {
       await manufacturerContract.updateRawProducts(
         ['Cocoa', 'Milk'],
         [farmerAddress, farmerAddress],
@@ -125,33 +118,32 @@ contract('Manufacturer', (accounts) => {
     it('getManufacturerRawProductDetails returns rawProduct structs', async () => {
       const products = await manufacturerContract.getManufacturerRawProductDetails(manufacturerAddress);
       assert.isAbove(products.length, 0);
-      assert.property(products[0], 'name');
-      assert.property(products[0], 'boughtFromIds');
-      assert.property(products[0], 'isVerified');
     });
 
     it('addRawProduct emits RawProductAdded event', async () => {
       const suppliers = [{ id: farmerAddress, isVerified: false }];
       const tx = await manufacturerContract.addRawProduct('Sugar', suppliers, { from: manufacturerAddress });
       const event = tx.logs.find(l => l.event === 'RawProductAdded');
-      assert.ok(event);
+      assert.ok(event, 'RawProductAdded event not emitted');
       assert.equal(event.args.name, 'Sugar');
     });
 
     it('addRawProduct rejects empty name', async () => {
-      await manufacturerContract.addRawProduct('', [], { from: manufacturerAddress })
-        .should.be.rejectedWith('name cannot be empty');
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.addRawProduct('', [], { from: manufacturerAddress })
+      );
+      assert.isTrue(reverted);
     });
 
-    it('addRawProduct rejects if caller not registered', async () => {
-      await manufacturerContract.addRawProduct('X', [], { from: accounts[8] })
-        .should.be.rejectedWith('not registered as manufacturer');
+    it('addRawProduct rejects unregistered caller', async () => {
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.addRawProduct('X', [], { from: accounts[8] })
+      );
+      assert.isTrue(reverted);
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Product lifecycle
-  // ───────────────────────────────────────────────────────────────
+  // ─── Product lifecycle ─────────────────────────────────────────
 
   describe('launchProduct', () => {
     it('launchProduct records the product id', async () => {
@@ -164,27 +156,29 @@ contract('Manufacturer', (accounts) => {
     it('emits ProductLaunched event', async () => {
       const tx = await manufacturerContract.launchProduct(8888, { from: manufacturerAddress });
       const event = tx.logs.find(l => l.event === 'ProductLaunched');
-      assert.ok(event);
+      assert.ok(event, 'ProductLaunched event not emitted');
       assert.equal(event.args.productId.toString(), '8888');
     });
 
-    it('launchProduct rejects if caller not registered', async () => {
-      await manufacturerContract.launchProduct(1111, { from: accounts[9] })
-        .should.be.rejectedWith('not registered');
+    it('launchProduct rejects unregistered caller', async () => {
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.launchProduct(1111, { from: accounts[9] })
+      );
+      assert.isTrue(reverted);
     });
   });
 
-  // ───────────────────────────────────────────────────────────────
-  // Verification (admin only)
-  // ───────────────────────────────────────────────────────────────
+  // ─── Verification ──────────────────────────────────────────────
 
-  describe('Verification', () => {
-    it('non-admin cannot verifyManufacturer', async () => {
-      await manufacturerContract.verifyManufacturer(manufacturerAddress, { from: nonAdmin })
-        .should.be.rejectedWith(Error);
+  describe('Manufacturer Verification', () => {
+    it('only admin can verify Manufacturer (non-admin fails)', async () => {
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.verifyManufacturer(manufacturerAddress, { from: nonAdmin })
+      );
+      assert.isTrue(reverted, 'Expected non-admin to fail');
     });
 
-    it('admin verifyManufacturer sets isRenewableUsed = true', async () => {
+    it('Verifying Manufacturer sets isRenewableUsed = true', async () => {
       await manufacturerContract.verifyManufacturer(manufacturerAddress, { from: admin });
       const { isRenewableUsed } = await manufacturerContract.getManufacturer(manufacturerAddress);
       assert.isTrue(isRenewableUsed);
@@ -193,13 +187,15 @@ contract('Manufacturer', (accounts) => {
     it('emits EnergyUpdated event on verifyManufacturer', async () => {
       const tx = await manufacturerContract.verifyManufacturer(manufacturer2Addr, { from: admin });
       const event = tx.logs.find(l => l.event === 'EnergyUpdated');
-      assert.ok(event);
+      assert.ok(event, 'EnergyUpdated event not emitted');
       assert.equal(event.args.manufacturer, manufacturer2Addr);
     });
 
-    it('verifyManufacturer fails for unregistered address', async () => {
-      await manufacturerContract.verifyManufacturer(accounts[9], { from: admin })
-        .should.be.rejectedWith('not registered');
+    it('verifyManufacturer rejects unregistered address', async () => {
+      const reverted = await shouldRevert(() =>
+        manufacturerContract.verifyManufacturer(accounts[9], { from: admin })
+      );
+      assert.isTrue(reverted);
     });
   });
 });

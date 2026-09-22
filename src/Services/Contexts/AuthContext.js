@@ -21,6 +21,18 @@ export const AuthContextProvider = ({children}) => {
       window.web3 = new Web3(window.ethereum);
       window.ethereum.enable();
       authDispatch(authStateEnableWeb3());
+
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload();
+      });
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts && accounts.length > 0) {
+          authDispatch(authStateLogin(accounts[0]));
+          window.location.reload();
+        } else {
+          authDispatch(authStateLogout());
+        }
+      });
     }
     else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);

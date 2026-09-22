@@ -173,7 +173,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -197,7 +198,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -210,7 +212,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -256,7 +259,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -269,7 +273,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -288,7 +293,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -307,7 +313,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -331,7 +338,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -350,7 +358,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -584,7 +593,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -597,7 +607,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -616,7 +627,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -23274,15 +23286,28 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
+      "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9EFD53f16e407D11A078871C980d0125a533749F",
-      "transactionHash": "0x458420e8d9166e9a3af143db486b49162be31c8dd639299f08f0b4fb38f4fef4"
+      "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
+      "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
+    },
+    "1790045722949": {
+      "events": {},
+      "links": {},
+      "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
+      "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T02:54:59.435Z",
+  "updatedAt": "2026-09-22T03:04:30.092Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "Extends Stakeholder for farmer-specific functionality. Preserved interfaces (used by setup-app.js and ContractContext.js):  - registerFarmer(name, location, role, rawProducts)  - getFarmer(id) -> (stakeholder, string[])  - addRawProduct(rawProduct)  - getRawProductFarmers(rawProduct) -> address[]  - getRole(id)          (inherited from Stakeholder)  - isVerified(id)       (inherited)  - verify(id)           (inherited)  - getAddresses()       (inherited)  - get(id)              (inherited) Added for tests / new requirements:  - register() override (delegates to registerFarmer with empty rawProducts)  - verifyFarmer(id)    alias for verify() – keeps test compatibility  - getFarmersList()    alias for getAddresses()  - addFarmer()         alias for registerFarmer (test compatibility) Events:  - FarmerRegistered(id, name, location)  - FarmerRawProductAdded(farmer, rawProduct)",
     "kind": "dev",

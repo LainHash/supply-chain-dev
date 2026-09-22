@@ -123,7 +123,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -177,7 +178,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -466,7 +468,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -512,7 +515,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -553,7 +557,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -566,7 +571,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -579,7 +585,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -592,7 +599,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -605,7 +613,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"title\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"manufacturer\",\"type\":\"address\"}],\"name\":\"ProductCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"actor\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"action\",\"type\":\"string\"}],\"name\":\"ProductHistoryAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"reviewer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rating\",\"type\":\"uint256\"}],\"name\":\"ProductReviewed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"ProductTransferred\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"_itemIds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"_items\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"title\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"manufacturer\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"currentOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"lastOwner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rating\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"launchDate\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"image_url\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_title\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isVerified\",\"type\":\"bool\"}],\"internalType\":\"struct Product.RawProduct[]\",\"name\":\"_rawProducts\",\"type\":\"tuple[]\"},{\"internalType\":\"string\",\"name\":\"_image_url\",\"type\":\"string\"}],\"name\":\"add\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_title\",\"type\":\"string\"},{\"internalType\":\"string[]\",\"name\":\"_rawProductNames\",\"type\":\"string[]\"}],\"name\":\"addProduct\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_rating\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_comment\",\"type\":\"string\"}],\"name\":\"addReview\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"get\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"title\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"manufacturer\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"currentOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"lastOwner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"rating\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"launchDate\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"image_url\",\"type\":\"string\"}],\"internalType\":\"struct Product.Item\",\"name\":\"item\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"txId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"date\",\"type\":\"uint256\"}],\"internalType\":\"struct Product.Transaction[]\",\"name\":\"transactions\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"date\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rating\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"comment\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"reviewer\",\"type\":\"address\"}],\"internalType\":\"struct Product.Review[]\",\"name\":\"reviews\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"isVerified\",\"type\":\"bool\"}],\"internalType\":\"struct Product.RawProduct[]\",\"name\":\"rawProducts\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getItemIds\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getProduct\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"title\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"manufacturer\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"ownership\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isValue\",\"type\":\"bool\"}],\"internalType\":\"struct Product.ProductInfo\",\"name\":\"info\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getProductHistory\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"actor\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"action\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"detail\",\"type\":\"string\"}],\"internalType\":\"struct Product.HistoryRecord[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getProductsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getReviewsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTransactionsCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"transfer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"updateOwnership\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Core supply-chain product contract. Preserved interfaces (used by setup-app.js, ContractContext.js, and product.js frontend):  - add(id, title, rawProducts[], image_url)  - get(id) -> (Item, Transaction[], Review[], RawProduct[])  - transfer(to, id)  - addReview(id, rating, comment)  - getItemIds()  - getProductsCount()  - getTransactionsCount()  - getReviewsCount() Added / completed for requirements:  - addProduct(serialNo, title, rawProducts[], {from}) \\u2014 test alias  - getProduct(serialNo) \\u2014 test alias returning flat struct with isValue flag  - updateOwnership(to, serialNo) \\u2014 test alias for transfer()  - getProductHistory(id) \\u2014 returns the on-chain history records Product History:  Each product has an array of HistoryRecord entries that is written  automatically by add(), transfer(), and addReview().  History is append-only. Events:  - ProductCreated(id, title, manufacturer)  - ProductTransferred(id, from, to)  - ProductReviewed(id, reviewer, rating)  - ProductHistoryAdded(id, actor, action)\",\"kind\":\"dev\",\"methods\":{\"add(uint256,string,(string,bool)[],string)\":{\"details\":\"Preserved signature; called by LaunchProduct.js and setup-app.js.\"},\"addProduct(uint256,string,string[])\":{\"details\":\"Tests call: addProduct(serialNo, title, rawProductNames[], {from}).      Accepts plain string[] instead of RawProduct[] for simplicity.\"},\"addReview(uint256,uint256,string)\":{\"details\":\"Preserved signature from original implementation.\"},\"get(uint256)\":{\"details\":\"Preserved signature used by ContractContext.js and product.js frontend.\"},\"getProduct(uint256)\":{\"details\":\"Tests check: product.isValue == true/false; product.ownership == address.      Uses uint256 id (tests pass productSerialNo = \\\"123456\\\" as a uint).\"},\"getProductHistory(uint256)\":{\"details\":\"History is append-only and recorded automatically; cannot be forged.\"},\"transfer(address,uint256)\":{\"details\":\"Preserved signature (called by product.js frontend and setup-app.js).\"}},\"title\":\"Product\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"add(uint256,string,(string,bool)[],string)\":{\"notice\":\"Create a new product in the system.\"},\"addProduct(uint256,string,string[])\":{\"notice\":\"Test-compatible alias for add().\"},\"addReview(uint256,uint256,string)\":{\"notice\":\"Post a review on a product. Caller must be the current owner.\"},\"get(uint256)\":{\"notice\":\"Full product data including all transactions, reviews, and raw products.\"},\"getItemIds()\":{\"notice\":\"Returns all product IDs ever registered.\"},\"getProduct(uint256)\":{\"notice\":\"Test-compatible retrieval returning a flat ProductInfo struct.\"},\"getProductHistory(uint256)\":{\"notice\":\"Returns the complete on-chain history for a product.\"},\"getProductsCount()\":{\"notice\":\"Total number of products.\"},\"getReviewsCount()\":{\"notice\":\"Total number of reviews.\"},\"getTransactionsCount()\":{\"notice\":\"Total number of transfer transactions.\"},\"transfer(address,uint256)\":{\"notice\":\"Transfer product ownership to `_to`.\"},\"updateOwnership(address,uint256)\":{\"notice\":\"Test-compatible alias: updateOwnership(to, serialNo).\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/Contracts/Product.sol\":\"Product\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/Contracts/Product.sol\":{\"keccak256\":\"0xaab10c9a584f5df38c58ff7fecb0e6895bcfe5cfd45e41a73c8f1dd4b2b043db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://71b6d8cc229f21bac3ccd50fff5f20ba8a69d7dfd2a37fae2c2cc0be1eb10629\",\"dweb:/ipfs/QmQnptRdPheTkrZFHDeGXGhvZ7CMAtJajbScEzDbUJjrKC\"]}},\"version\":1}",
@@ -35955,15 +35964,28 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0xb09bCc172050fBd4562da8b229Cf3E45Dc3045A6",
+      "transactionHash": "0x63cfcfd03169b98de85b86d4bfa9f657e2b54ad55ad1873b232cfbc65921c44d"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xb0F3677F21813db618399c46F3E8eAec22ACc2Bf",
-      "transactionHash": "0x69adebb29603373c2f763b0d3e1446ab05cc6cce3de03f289bfae8623a28f170"
+      "address": "0xb09bCc172050fBd4562da8b229Cf3E45Dc3045A6",
+      "transactionHash": "0x63cfcfd03169b98de85b86d4bfa9f657e2b54ad55ad1873b232cfbc65921c44d"
+    },
+    "1790045722949": {
+      "events": {},
+      "links": {},
+      "address": "0xb09bCc172050fBd4562da8b229Cf3E45Dc3045A6",
+      "transactionHash": "0x63cfcfd03169b98de85b86d4bfa9f657e2b54ad55ad1873b232cfbc65921c44d"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T02:54:59.479Z",
+  "updatedAt": "2026-09-22T03:04:30.177Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "Core supply-chain product contract. Preserved interfaces (used by setup-app.js, ContractContext.js, and product.js frontend):  - add(id, title, rawProducts[], image_url)  - get(id) -> (Item, Transaction[], Review[], RawProduct[])  - transfer(to, id)  - addReview(id, rating, comment)  - getItemIds()  - getProductsCount()  - getTransactionsCount()  - getReviewsCount() Added / completed for requirements:  - addProduct(serialNo, title, rawProducts[], {from}) — test alias  - getProduct(serialNo) — test alias returning flat struct with isValue flag  - updateOwnership(to, serialNo) — test alias for transfer()  - getProductHistory(id) — returns the on-chain history records Product History:  Each product has an array of HistoryRecord entries that is written  automatically by add(), transfer(), and addReview().  History is append-only. Events:  - ProductCreated(id, title, manufacturer)  - ProductTransferred(id, from, to)  - ProductReviewed(id, reviewer, rating)  - ProductHistoryAdded(id, actor, action)",
     "kind": "dev",

@@ -36,49 +36,132 @@ export const ContractContextProvider = ({children}) => {
   const [networkId, setNetworkId] = useState(null);
   const { authState, authDispatch } = useContext(AuthContext);
 
+  const getContractAddress = (contract, netId) => {
+    if (!contract || !contract.networks) return null;
+    if (netId && contract.networks[netId] && contract.networks[netId].address) {
+      return contract.networks[netId].address;
+    }
+    // Fallback to local networks: 1337, 5777, 1790045722949, or latest deployed
+    const fallbackIds = ["1337", "5777", "1790045722949"];
+    for (let id of fallbackIds) {
+      if (contract.networks[id] && contract.networks[id].address) {
+        return contract.networks[id].address;
+      }
+    }
+    const keys = Object.keys(contract.networks);
+    if (keys.length > 0) {
+      return contract.networks[keys[keys.length - 1]].address;
+    }
+    return null;
+  };
+
+  const ensureGanacheNetwork = async () => {
+    if (!window.ethereum) return;
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: "0x539" }], // 1337
+      });
+    } catch (switchError) {
+      if (switchError.code === 4902 || switchError.message?.includes("Unrecognized")) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+              chainId: "0x539",
+              chainName: "Ganache Local",
+              rpcUrls: ["http://127.0.0.1:7545"],
+              nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 }
+            }],
+          });
+        } catch (addError) {
+          console.warn("Could not add Ganache network automatically:", addError);
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     (async () => {
       if(authState.isWeb3Enabled){
-        const web3 = window.web3;
-        const networkId = await web3.eth.net.getId();
-        setNetworkId(networkId);
-        const main = new web3.eth.Contract(MainContract.abi, MainContract.networks[networkId].address);
-        contractDispatch(contractStateMain(main));
-        const product  = new web3.eth.Contract(ProductContract.abi, ProductContract.networks[networkId].address);
-        contractDispatch(contractStateProduct(product));
-        const farmer = new web3.eth.Contract(FarmerContract.abi, FarmerContract.networks[networkId].address);
-        contractDispatch(contractStateFarmer(farmer));
-        const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, ManufacturerContract.networks[networkId].address);
-        contractDispatch(contractStateManufacturer(manufacturer));
-        const stats = {};
-        stats["productsCount"] = await product.methods.getProductsCount().call();
-        stats["transactionsCount"] = await product.methods.getTransactionsCount().call();
-        stats["reviewsCount"] = await product.methods.getReviewsCount().call();
-        contractDispatch(contractStateStats(stats));
+        try {
+          const web3 = window.web3;
+          const networkId = await web3.eth.net.getId();
+          setNetworkId(networkId);
+
+          const mainAddr = getContractAddress(MainContract, networkId);
+          const productAddr = getContractAddress(ProductContract, networkId);
+          const farmerAddr = getContractAddress(FarmerContract, networkId);
+          const manufacturerAddr = getContractAddress(ManufacturerContract, networkId);
+
+          if (!mainAddr || !productAddr) {
+            console.warn("Smart contracts are not deployed on the current network (" + networkId + "). Please switch MetaMask to Ganache Local (http://127.0.0.1:7545).");
+            await ensureGanacheNetwork();
+            return;
+          }
+
+          // Verify that contract bytecode actually exists at mainAddr on the active network
+          const code = await web3.eth.getCode(mainAddr);
+          if (!code || code === "0x" || code === "0x0") {
+            console.warn("No contract bytecode at " + mainAddr + " on network " + networkId + ". Prompting switch to Ganache Local...");
+            await ensureGanacheNetwork();
+            return;
+          }
+
+          const main = new web3.eth.Contract(MainContract.abi, mainAddr);
+          contractDispatch(contractStateMain(main));
+          const product  = new web3.eth.Contract(ProductContract.abi, productAddr);
+          contractDispatch(contractStateProduct(product));
+          const farmer = new web3.eth.Contract(FarmerContract.abi, farmerAddr);
+          contractDispatch(contractStateFarmer(farmer));
+          const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, manufacturerAddr);
+          contractDispatch(contractStateManufacturer(manufacturer));
+
+          const stats = {};
+          stats["productsCount"] = await product.methods.getProductsCount().call();
+          stats["transactionsCount"] = await product.methods.getTransactionsCount().call();
+          stats["reviewsCount"] = await product.methods.getReviewsCount().call();
+          contractDispatch(contractStateStats(stats));
+        } catch (err) {
+          console.error("Failed to load contracts:", err);
+        }
       }
     })();
   }, [authState.isWeb3Enabled])
 
   useEffect(() => {
     (async () => {
-      if(authState.isAuthenticated && contractState.mainContract){
-        const web3 = window.web3;
-        const role = await contractState.mainContract.methods.getRole(authState.address).call();
-        if( role === "farmer"){
-          const farmer = new web3.eth.Contract(FarmerContract.abi, FarmerContract.networks[networkId].address);
-          contractDispatch(contractStateStakeholder(farmer));
-        }
-        else if(role === 'manufacturer'){
-          const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, ManufacturerContract.networks[networkId].address);
-          contractDispatch(contractStateStakeholder(manufacturer));
-        }
-        else {
-          const stakeholder = new web3.eth.Contract(StakeholderContract.abi, StakeholderContract.networks[networkId].address);
-          contractDispatch(contractStateStakeholder(stakeholder));
+      if(authState.isAuthenticated && contractState.mainContract && authState.address){
+        try {
+          const web3 = window.web3;
+          const role = await contractState.mainContract.methods.getRole(authState.address).call();
+          if( role === "farmer"){
+            const addr = getContractAddress(FarmerContract, networkId);
+            if (addr) {
+              const farmer = new web3.eth.Contract(FarmerContract.abi, addr);
+              contractDispatch(contractStateStakeholder(farmer));
+            }
+          }
+          else if(role === 'manufacturer'){
+            const addr = getContractAddress(ManufacturerContract, networkId);
+            if (addr) {
+              const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, addr);
+              contractDispatch(contractStateStakeholder(manufacturer));
+            }
+          }
+          else {
+            const addr = getContractAddress(StakeholderContract, networkId);
+            if (addr) {
+              const stakeholder = new web3.eth.Contract(StakeholderContract.abi, addr);
+              contractDispatch(contractStateStakeholder(stakeholder));
+            }
+          }
+        } catch (err) {
+          console.error("Failed to resolve user role:", err);
         }
       }
     })();
-  }, [authState.isAuthenticated, contractState.mainContract])
+  }, [authState.isAuthenticated, contractState.mainContract, authState.address])
 
   useEffect(() => {
     (async () => {
@@ -87,21 +170,25 @@ export const ContractContextProvider = ({children}) => {
   }, [contractState.stakeholderContract])
 
   const loadStakeholder = async () => {
-    if(contractState.stakeholderContract){
-      let stakeholderDetails = await contractState.stakeholderContract.methods.get(authState.address).call({from: authState.address});
-      stakeholderDetails = {
-        id: stakeholderDetails.id,
-        name: stakeholderDetails.name,
-        location: stakeholderDetails.location,
-        role: stakeholderDetails.role === "" ? "new" : stakeholderDetails.role,
-        isRegistered: stakeholderDetails.role === "" ? false : true,
-        isVerified: stakeholderDetails.isVerified
+    if(contractState.stakeholderContract && authState.address && contractState.mainContract){
+      try {
+        let stakeholderDetails = await contractState.stakeholderContract.methods.get(authState.address).call({from: authState.address});
+        stakeholderDetails = {
+          id: stakeholderDetails.id,
+          name: stakeholderDetails.name,
+          location: stakeholderDetails.location,
+          role: stakeholderDetails.role === "" ? "new" : stakeholderDetails.role,
+          isRegistered: stakeholderDetails.role === "" ? false : true,
+          isVerified: stakeholderDetails.isVerified
+        }
+        const role = await contractState.mainContract.methods.getRole(authState.address).call();
+        if(role == "admin"){
+          stakeholderDetails.role = role;
+        }
+        authDispatch(authStateStakeholder(stakeholderDetails));
+      } catch (err) {
+        console.error("Failed to load stakeholder details:", err);
       }
-      const role = await contractState.mainContract.methods.getRole(authState.address).call();
-      if(role == "admin"){
-        stakeholderDetails.role = role;
-      }
-      authDispatch(authStateStakeholder(stakeholderDetails));
     }
   }
 

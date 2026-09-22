@@ -60,5 +60,7 @@ export const authReducuer = (state, action) => {
         ...state,
         stakeholder: action.payload.stakeholder
       }
+    default:
+      return state;
   }
 }

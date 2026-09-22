@@ -2607,7 +2607,8 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T02:54:59.425Z",
+  "updatedAt": "2026-09-22T03:04:30.044Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "Provides a simple single-admin ownership model with an onlyAdmin modifier.      The deploying account becomes the permanent admin.",
     "kind": "dev",

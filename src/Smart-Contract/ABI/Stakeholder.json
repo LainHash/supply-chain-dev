@@ -118,7 +118,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -137,7 +138,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -212,7 +214,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -231,7 +234,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -250,7 +254,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -263,7 +268,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -330,7 +336,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -17117,15 +17124,28 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {
+    "1337": {
+      "events": {},
+      "links": {},
+      "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
+      "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xdC750982b1D83D635DC1b1145aacff328A2B8121",
-      "transactionHash": "0x8b13bf04f9be6d980a5a4496af4f2491c60c0b73d32f4be2cd3dbff5f406d7e1"
+      "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
+      "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
+    },
+    "1790045722949": {
+      "events": {},
+      "links": {},
+      "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
+      "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T02:54:59.495Z",
+  "updatedAt": "2026-09-22T03:04:30.059Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "Base contract for all supply-chain participants (farmers, manufacturers,      distributors, retailers, consumers).  Extends Admin so that the first      deploying account is always the administrator. Key design decisions preserved from original:  - The `stakeholder` struct is the canonical identity record.  - `_stakeholders` mapping keyed by address.  - `_stakeholderAddresses` array for enumeration (used by the admin verify UI).  - Product ownership & operator approvals live here so they are shared. What was added / fixed:  - Error messages on every require().  - Events: StakeholderRegistered, StakeholderVerified, ApprovalForAll, ProductTransferred.  - `onlyRegisteredStakeholder` modifier (renamed from broken `onlyStakeholder`).  - `getRole()` exposed as external view for Main.sol.",
     "kind": "dev",
