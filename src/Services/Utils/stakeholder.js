@@ -1,31 +1,36 @@
 export const fetchFarmer = async (curr_address, farmerContract, id) => {
-  const response = await farmerContract.methods.getFarmer(id).call({from: curr_address});
+  const callParams = curr_address ? { from: curr_address } : {};
+  const response = await farmerContract.methods.getFarmer(id).call(callParams);
   return {
     ...response.farmer,
-    formattedAddress: id.substring(0, 6) + "..." + id.substring(id.length - 4, id.length),
+    formattedAddress: formattedAddress(id),
     rawProducts: response.rawProducts
   }
 }
 
 export const fetchManufacturer = async (curr_address, manufacturerContract, id) => {
-  const response = await manufacturerContract.methods.getManufacturer(id).call({from: curr_address});
+  const callParams = curr_address ? { from: curr_address } : {};
+  const response = await manufacturerContract.methods.getManufacturer(id).call(callParams);
   return {
     ...response.manufacturer,
     isRenewableUsed: response.isRenewableUsed,
-    formattedAddress: id.substring(0, 6) + "..." + id.substring(id.length - 4, id.length),
+    formattedAddress: formattedAddress(id),
     rawProducts: response.rawProducts,
     launchedProductIds: response.launchedProductIds
   }
 }
 
 export const fetchStakeholder = async (curr_address, stakeholderContract, id) => {
-  const response = await stakeholderContract.methods.get(id).call({from: curr_address});
+  const callParams = curr_address ? { from: curr_address } : {};
+  const response = await stakeholderContract.methods.get(id).call(callParams);
   return {
     ...response,
-    formattedAddress: id.substring(0, 6) + "..." + id.substring(id.length - 4, id.length),
+    formattedAddress: formattedAddress(id),
   }
 }
 
 export const formattedAddress = (address) => {
-  return address.substring(0,6) + "..." + address.substring(address.length - 4);
+  if (!address || typeof address !== 'string') return "N/A";
+  if (address.length <= 10) return address;
+  return address.substring(0, 6) + "..." + address.substring(address.length - 4);
 }

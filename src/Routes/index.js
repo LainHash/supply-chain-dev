@@ -14,6 +14,7 @@ import Farmer from '../Pages/Farmers/farmer';
 import Manufacturers from '../Pages/Manufacturers';
 import Manufacturer from '../Pages/Manufacturers/manufacturer';
 import Profile from '../Pages/Profile';
+import Traceability from '../Pages/Traceability';
 
 const Routing = () => {
   const {authState}  = useContext(AuthContext);
@@ -78,6 +79,8 @@ const Routing = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard/>}/>
+      <Route path="/trace" element={<Traceability/>} />
+      <Route path="/trace/:id" element={<Traceability/>} />
       {authRoutes()}
       {roleRoutes()}
       <Route path="*" element={<Navigate to="/" replace/>} />

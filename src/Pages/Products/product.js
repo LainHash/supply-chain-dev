@@ -1,40 +1,59 @@
 import { useContext, useEffect, useState } from 'react';
 
 import '../../Assests/Styles/product.page.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { fetchManufacturer, formattedAddress } from '../../Services/Utils/stakeholder';
 import { ContractContext } from '../../Services/Contexts/ContractContext';
 import { AuthContext } from '../../Services/Contexts/AuthContext';
 import Toast from '../../Components/Toast';
 import Rating from '../../Components/Rating';
+import QRCodeModal from '../../Components/Modals/QRCodeModal';
 
 const Product = () => {
   const location = useLocation();
+  const { id: paramId } = useParams();
   const { authState } = useContext(AuthContext);
   const { contractState, updateStats } = useContext(ContractContext);
-  const [product, setProduct] = useState(location.state.product);
+
+  const [product, setProduct] = useState(location?.state?.product || null);
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [transferState, setTransferState] = useState({
     from: authState.address,
+    to: ""
   });
   const [reviewState, setReviewState] = useState({
     rating: 0,
     comment: "",
     from: authState.address,
-  })
-  const [isOwner, setIsOnwer] = useState(authState.address.toLowerCase() == location.state.product.item["currentOwner"].toLowerCase());
+  });
+
+  const productId = location?.state?.product?.item?.id || paramId;
+  const isOwner = authState.address && product?.item?.currentOwner
+    ? authState.address.toLowerCase() === product.item["currentOwner"].toLowerCase()
+    : false;
 
   const reload = async () => {
-    const id = location.state.product.item.id;
-    const response = await contractState.productContract.methods.get(id).call({from: authState.address});
-    const product = {
-      "item": response.item,
-      "rawProducts": response.rawProducts,
-      "reviews": response.reviews,
-      "transactions": response.transactions,
-      "manufacturer": await fetchManufacturer(authState.address, contractState.manufacturerContract, response.item["manufacturer"])
+    if (!contractState.productContract || !productId) return;
+    try {
+      const response = await contractState.productContract.methods.get(productId).call({from: authState.address || "0x0000000000000000000000000000000000000000"});
+      const productObj = {
+        "item": response.item,
+        "rawProducts": response.rawProducts,
+        "reviews": response.reviews,
+        "transactions": response.transactions,
+        "manufacturer": await fetchManufacturer(authState.address, contractState.manufacturerContract, response.item["manufacturer"])
+      }
+      setProduct(productObj);
+    } catch (err) {
+      console.error("Lỗi khi tải lại dữ liệu sản phẩm:", err);
     }
-    setProduct(product);
   }
+
+  useEffect(() => {
+    if (!product && contractState.productContract && productId) {
+      reload();
+    }
+  }, [contractState.productContract, productId]);
 
   const transfer = async () => {
     await contractState.productContract.methods.transfer(transferState.to, product.item.id).send({from: authState.address});
@@ -95,12 +114,22 @@ const Product = () => {
       "icon": <i className="fa fa-check fa-2x"/>,
       "label": "Genuine Products"
     }
-  ]
+  ];
+
+  if (!product) {
+    return (
+      <div className="wrapper text-center py-5">
+        <div className="spinner-border text-warning" role="status" />
+        <p className="mt-3 text-muted fw-bold">Đang tải thông tin sản phẩm từ Blockchain...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="wrapper">
       <div className="row top-wrapper">
         <div className="col-12 col-md-4 tw-left">
-          <img src={product.item["image_url"]} width="100%"/>
+          <img src={product.item["image_url"]} width="100%" alt={product.item["title"] || "Sản phẩm"} />
         </div>
         <div className="col-12 col-md-8 tw-right">
           <span className="tw-heading1">
@@ -150,7 +179,7 @@ const Product = () => {
             onChange={
               (e) => {
                 setTransferState({
-                  ...transfer,
+                  ...transferState,
                   to: e.target.value
                 })
               }
@@ -161,6 +190,22 @@ const Product = () => {
               disabled={!isOwner}
               onClick={transfer}
             >Transfer</button>
+          </div>
+          <div className="mt-3 d-flex gap-2 flex-wrap">
+            <button 
+              className="btn btn-warning fw-bold text-dark"
+              onClick={() => setIsQRModalOpen(true)}
+            >
+              <i className="fa fa-qrcode me-1" /> Xuất Tem Mã QR
+            </button>
+            <a 
+              href={`/trace/${product.item.id}`} 
+              target="_blank" 
+              rel="noreferrer"
+              className="btn btn-outline-info"
+            >
+              <i className="fa fa-external-link me-1" /> Trang Tra Cứu
+            </a>
           </div>
         </div>
       </div>
@@ -245,6 +290,16 @@ const Product = () => {
           </div>
         </div>
       </div>
+
+      <QRCodeModal
+        isOpen={isQRModalOpen}
+        toggle={() => setIsQRModalOpen(!isQRModalOpen)}
+        productId={product.item.id}
+        productTitle={product.item.title}
+        productImage={product.item.image_url}
+        manufacturerName={product.manufacturer ? product.manufacturer.name : ""}
+        launchDate={product.item.launchDate}
+      />
     </div>
   )
 }

@@ -96,13 +96,20 @@ export const ContractContextProvider = ({children}) => {
 
           if (!mainAddr || !productAddr) {
             console.warn("Smart contracts are not deployed on the current network (" + networkId + "). Please switch MetaMask to Ganache Local (http://127.0.0.1:7545).");
-            await ensureGanacheNetwork();
+            if (window.ethereum) {
+              await ensureGanacheNetwork();
+            }
             return;
           }
 
           // Verify that contract bytecode actually exists at mainAddr on the active network
-          const code = await web3.eth.getCode(mainAddr);
-          if (!code || code === "0x" || code === "0x0") {
+          let code = null;
+          try {
+            code = await web3.eth.getCode(mainAddr);
+          } catch(e) {
+            console.warn("Could not verify contract bytecode:", e);
+          }
+          if ((!code || code === "0x" || code === "0x0") && window.ethereum) {
             console.warn("No contract bytecode at " + mainAddr + " on network " + networkId + ". Prompting switch to Ganache Local...");
             await ensureGanacheNetwork();
             return;
@@ -117,11 +124,15 @@ export const ContractContextProvider = ({children}) => {
           const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, manufacturerAddr);
           contractDispatch(contractStateManufacturer(manufacturer));
 
-          const stats = {};
-          stats["productsCount"] = await product.methods.getProductsCount().call();
-          stats["transactionsCount"] = await product.methods.getTransactionsCount().call();
-          stats["reviewsCount"] = await product.methods.getReviewsCount().call();
-          contractDispatch(contractStateStats(stats));
+          try {
+            const stats = {};
+            stats["productsCount"] = await product.methods.getProductsCount().call();
+            stats["transactionsCount"] = await product.methods.getTransactionsCount().call();
+            stats["reviewsCount"] = await product.methods.getReviewsCount().call();
+            contractDispatch(contractStateStats(stats));
+          } catch (statsErr) {
+            console.warn("Failed to fetch initial stats:", statsErr);
+          }
         } catch (err) {
           console.error("Failed to load contracts:", err);
         }

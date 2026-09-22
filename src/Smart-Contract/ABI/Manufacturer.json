@@ -35630,24 +35630,30 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
-      "transactionHash": "0x3e282919a4583c727ec311c24f256f01d516c19d08780c00a028f02693ee0301"
+      "address": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24",
+      "transactionHash": "0xe70dc9fdc218c1c810a1e569e31844b5e19ecb3c50daaaa66eac3d86fd2ac35f"
     },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
-      "transactionHash": "0x3e282919a4583c727ec311c24f256f01d516c19d08780c00a028f02693ee0301"
+      "address": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24",
+      "transactionHash": "0xe70dc9fdc218c1c810a1e569e31844b5e19ecb3c50daaaa66eac3d86fd2ac35f"
     },
     "1790045722949": {
       "events": {},
       "links": {},
       "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
       "transactionHash": "0x3e282919a4583c727ec311c24f256f01d516c19d08780c00a028f02693ee0301"
+    },
+    "1790054892092": {
+      "events": {},
+      "links": {},
+      "address": "0x5b1869D9A4C187F2EAa108f3062412ecf0526b24",
+      "transactionHash": "0xe70dc9fdc218c1c810a1e569e31844b5e19ecb3c50daaaa66eac3d86fd2ac35f"
     }
   },
-  "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T03:04:30.145Z",
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2026-09-22T05:32:05.941Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Extends Stakeholder for manufacturer-specific functionality. Preserved interfaces (used by setup-app.js, ContractContext.js, and frontend modals):  - register(name, location, role)  - addRawProduct(name, suppliers[])  - getManufacturerRawProductDetails(id) -> rawProduct[]  - getManufacturer(id) -> (stakeholder, bool, rawProduct[], uint256[])  - launchProduct(id)  - updateEnergy(id)   (admin only)  - getRole(id)        (inherited)  - isVerified(id)     (inherited)  - verify(id)         (inherited)  - getAddresses()     (inherited)  - get(id)            (inherited) Added for tests / new requirements:  - addManufacturer(name, rawProducts[], suppliers[]) — test alias  - verifyManufacturer(id)                           — test alias  - getManufacturersList()                           — test alias  - updateRawProducts(names[], suppliers[])          — test requirement  - getRawProductInfo(manufacturer, name) -> address — test requirement Events:  - ManufacturerRegistered(id, name, location)  - RawProductAdded(manufacturer, name)  - ProductLaunched(manufacturer, productId)  - EnergyUpdated(manufacturer)",

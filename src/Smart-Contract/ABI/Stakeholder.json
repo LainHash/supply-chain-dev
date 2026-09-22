@@ -17127,24 +17127,30 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
-      "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
+      "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+      "transactionHash": "0xc3b7ba4aef76660628b6b7e8f65cb5f05791a660e0323709fd23221e38c44010"
     },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
-      "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
+      "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+      "transactionHash": "0xc3b7ba4aef76660628b6b7e8f65cb5f05791a660e0323709fd23221e38c44010"
     },
     "1790045722949": {
       "events": {},
       "links": {},
       "address": "0x6eD79Aa1c71FD7BdBC515EfdA3Bd4e26394435cC",
       "transactionHash": "0xa14c7c16869ed040bcf9ebf591985407138e0e2673bb1c81069cf65df9afe903"
+    },
+    "1790054892092": {
+      "events": {},
+      "links": {},
+      "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+      "transactionHash": "0xc3b7ba4aef76660628b6b7e8f65cb5f05791a660e0323709fd23221e38c44010"
     }
   },
-  "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T03:04:30.059Z",
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2026-09-22T05:32:05.902Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Base contract for all supply-chain participants (farmers, manufacturers,      distributors, retailers, consumers).  Extends Admin so that the first      deploying account is always the administrator. Key design decisions preserved from original:  - The `stakeholder` struct is the canonical identity record.  - `_stakeholders` mapping keyed by address.  - `_stakeholderAddresses` array for enumeration (used by the admin verify UI).  - Product ownership & operator approvals live here so they are shared. What was added / fixed:  - Error messages on every require().  - Events: StakeholderRegistered, StakeholderVerified, ApprovalForAll, ProductTransferred.  - `onlyRegisteredStakeholder` modifier (renamed from broken `onlyStakeholder`).  - `getRole()` exposed as external view for Main.sol.",

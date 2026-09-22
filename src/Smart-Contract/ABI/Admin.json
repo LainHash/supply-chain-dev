@@ -2606,8 +2606,8 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T03:04:30.044Z",
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2026-09-22T05:32:05.894Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Provides a simple single-admin ownership model with an onlyAdmin modifier.      The deploying account becomes the permanent admin.",

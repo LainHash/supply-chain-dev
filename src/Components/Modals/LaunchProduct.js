@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import { Button, Input, InputGroup, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { NFTStorage } from "nft.storage/dist/bundle.esm.min.js";
 
@@ -8,10 +8,13 @@ import { AuthContext } from "../../Services/Contexts/AuthContext"
 import { ContractContext } from "../../Services/Contexts/ContractContext";
 import Toast from "../Toast";
 import Loading from "../Loading";
+import QRCodeModal from "./QRCodeModal";
 
 const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
   const { authState } = useContext(AuthContext);
   const { contractState, updateStats } = useContext(ContractContext);
+  const [createdProduct, setCreatedProduct] = useState(null);
+  const [showCreatedQR, setShowCreatedQR] = useState(false);
   const [product, setProduct] = useState({
     id: "",
     title: "",
@@ -46,13 +49,23 @@ const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
         "isVerified": manufacturerRP[key].isVerified
       }
     })
-    if(selectedRP.length == 0){
+    if(selectedRP.length === 0){
       Toast("error", "Please select atleast one raw product");
       return;
     }
+
+    const launchedId = product.id;
+    const launchedTitle = product.title;
+    const launchedImg = product.image.url;
+
     await contractState.productContract.methods.add(product.id, product.title, selectedRP, product.image.url).send({from: authState.address});
     await contractState.manufacturerContract.methods.launchProduct(product.id).send({from: authState.address});
     Toast("success", "Launced Product!");
+    setCreatedProduct({
+      id: launchedId,
+      title: launchedTitle,
+      image_url: launchedImg
+    });
     setProduct({
       id: "",
       title: "",
@@ -61,8 +74,9 @@ const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
         url: "",
         isLoading: false,
       }
-    })
+    });
     toggleModal();
+    setShowCreatedQR(true);
     updateStats();
   }
 
@@ -173,6 +187,18 @@ const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
           }}>Cancel</Button>
         </ModalFooter>
       </Modal>
+
+      {createdProduct && (
+        <QRCodeModal
+          isOpen={showCreatedQR}
+          toggle={() => setShowCreatedQR(!showCreatedQR)}
+          productId={createdProduct.id}
+          productTitle={createdProduct.title}
+          productImage={createdProduct.image_url}
+          manufacturerName={authState.stakeholder.name || "Nhà sản xuất"}
+          launchDate={Math.floor(Date.now() / 1000)}
+        />
+      )}
     </div>
   )
 }

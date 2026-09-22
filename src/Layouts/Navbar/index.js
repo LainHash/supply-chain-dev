@@ -1,13 +1,17 @@
 import { useContext, useState } from "react";
-import { Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem } from "reactstrap";
-import { NavLink } from 'react-router-dom';
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, Button } from "reactstrap";
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import logo from '../../Assests/Images/logo_mini.png';
 import { AuthContext } from "../../Services/Contexts/AuthContext";
+import QRScannerModal from "../../Components/Modals/QRScannerModal";
 
 const Header = () => {
   const {authState, connectWallet, logout}  = useContext(AuthContext);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const navigate = useNavigate();
+
   const isAuthenticated = authState.isAuthenticated;
   const role = authState.stakeholder.role;
   const style = {
@@ -22,6 +26,14 @@ const Header = () => {
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
+  }
+
+  const toggleScanner = () => {
+    setIsScannerOpen(!isScannerOpen);
+  }
+
+  const handleScanSuccess = (productId) => {
+    navigate(`/trace/${productId}`);
   }
 
   const roleNavLinks = () => {
@@ -79,8 +91,8 @@ const Header = () => {
         expand='md' 
         dark
       >
-        <NavbarBrand>
-          <img src={logo} />
+        <NavbarBrand href="/">
+          <img src={logo} alt="logo" />
           Global Supply Solutions
         </NavbarBrand>
         <NavbarToggler onClick={toggleNav} >
@@ -92,6 +104,12 @@ const Header = () => {
         </NavbarToggler>
         <Collapse navbar isOpen={isNavOpen}>
           <Nav className="mx-auto" navbar >
+            {/* Luôn hiển thị Truy Xuất QR cho mọi người dùng */}
+            <NavItem>
+              <NavLink className="nav-link fw-bold text-dark" to="/trace">
+                <i className="fa fa-qrcode me-1" /> Truy Xuất QR
+              </NavLink>
+            </NavItem>
             { isAuthenticated?
               <>
               <NavItem>
@@ -110,7 +128,18 @@ const Header = () => {
               ""
             }
           </Nav>
-          <Nav className="ms-auto" navbar>
+          <Nav className="ms-auto d-flex align-items-center" navbar>
+            <NavItem className="me-2">
+              <Button 
+                color="dark" 
+                size="sm" 
+                className="d-flex align-items-center"
+                onClick={toggleScanner}
+                title="Quét mã QR bằng máy ảnh"
+              >
+                <i className="fa fa-camera me-1" /> Quét QR
+              </Button>
+            </NavItem>
             { isAuthenticated?
               <>
               <NavbarText style={style.authText}>
@@ -134,7 +163,12 @@ const Header = () => {
           </Nav>
         </Collapse>
       </Navbar>
-      
+
+      <QRScannerModal
+        isOpen={isScannerOpen}
+        toggle={toggleScanner}
+        onScanSuccess={handleScanSuccess}
+      />
     </div>
   )
 }

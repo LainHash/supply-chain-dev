@@ -74,12 +74,18 @@ async function seed() {
   // 2. Manufacturer Registration
   console.log('\n🏭 2. Registering Manufacturer...');
   try {
-    const existing = await manuC.methods.getManufacturer(manufacturer).call({ from: admin });
-    if (!existing.manufacturer || !existing.manufacturer.name) {
+    const existing = await manuC.methods.get(manufacturer).call({ from: admin });
+    if (!existing.name) {
+      await manuC.methods.register(
+        'Nhà Máy Chế Biến Nông Sản Tây Nguyên',
+        'TP. Buôn Ma Thuột, Đắk Lắk',
+        'manufacturer'
+      ).send({ from: manufacturer, gas: 1000000 });
+
       await manuC.methods.addManufacturer(
         'Nhà Máy Chế Biến Nông Sản Tây Nguyên',
         ['Hạt Cà Phê Arabica Cầu Đất', 'Lá Trà Oolong Bảo Lộc'],
-        [farmer]
+        [farmer, farmer]
       ).send({ from: manufacturer, gas: 3000000 });
       console.log('✅ Manufacturer registered: Nhà Máy Chế Biến Nông Sản Tây Nguyên');
     } else {
@@ -131,7 +137,7 @@ async function seed() {
 
   // Product 101: Coffee (Fully Completed with Transfer & Reviews)
   try {
-    const p1 = await productC.methods.getProduct(101).call();
+    let p1 = await productC.methods.getProduct(101).call();
     if (!p1.isValue) {
       await productC.methods.add(
         101,
@@ -141,24 +147,26 @@ async function seed() {
       ).send({ from: manufacturer, gas: 2000000 });
       await manuC.methods.launchProduct(101).send({ from: manufacturer, gas: 500000 });
       console.log('✅ Product 101 created: Cà Phê Arabica Cầu Đất');
+      p1 = await productC.methods.getProduct(101).call();
+    } else {
+      console.log('ℹ️ Product 101 already exists');
+    }
 
-      // Transfer to Distributor
+    if (p1.ownership.toLowerCase() === manufacturer.toLowerCase()) {
       await productC.methods.transfer(distributor, 101).send({ from: manufacturer, gas: 500000 });
       console.log('🚚 Product 101 transferred to Distributor');
+      p1 = await productC.methods.getProduct(101).call();
+    }
 
-      // Transfer to Consumer
+    if (p1.ownership.toLowerCase() === distributor.toLowerCase()) {
       await productC.methods.transfer(consumer, 101).send({ from: distributor, gas: 500000 });
       console.log('🛒 Product 101 transferred to Consumer');
-
-      // Consumer Review
       await productC.methods.addReview(
         101,
         96,
         'Hương thơm nguyên bản ngào ngạt, vị đắng thanh dịu, nguồn gốc rõ ràng từ nông trại!'
       ).send({ from: consumer, gas: 500000 });
       console.log('⭐ Product 101 received review (Rating: 96/100)');
-    } else {
-      console.log('ℹ️ Product 101 already exists');
     }
   } catch (err) {
     console.log('Product 101 notice:', err.message);
@@ -166,7 +174,7 @@ async function seed() {
 
   // Product 102: Tea (At Distributor stage)
   try {
-    const p2 = await productC.methods.getProduct(102).call();
+    let p2 = await productC.methods.getProduct(102).call();
     if (!p2.isValue) {
       await productC.methods.add(
         102,
@@ -176,20 +184,20 @@ async function seed() {
       ).send({ from: manufacturer, gas: 2000000 });
       await manuC.methods.launchProduct(102).send({ from: manufacturer, gas: 500000 });
       console.log('✅ Product 102 created: Trà Oolong Thượng Hạng');
+      p2 = await productC.methods.getProduct(102).call();
+    } else {
+      console.log('ℹ️ Product 102 already exists');
+    }
 
-      // Transfer to Distributor
+    if (p2.ownership.toLowerCase() === manufacturer.toLowerCase()) {
       await productC.methods.transfer(distributor, 102).send({ from: manufacturer, gas: 500000 });
       console.log('🚚 Product 102 transferred to Distributor');
-
-      // Distributor Review
       await productC.methods.addReview(
         102,
         92,
         'Hàng đóng gói đạt chuẩn vệ sinh an toàn thực phẩm, bao bì bảo quản tốt.'
       ).send({ from: distributor, gas: 500000 });
       console.log('⭐ Product 102 received review from Distributor');
-    } else {
-      console.log('ℹ️ Product 102 already exists');
     }
   } catch (err) {
     console.log('Product 102 notice:', err.message);

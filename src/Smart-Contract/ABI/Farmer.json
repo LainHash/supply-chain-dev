@@ -23289,24 +23289,30 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
-      "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
+      "address": "0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab",
+      "transactionHash": "0x7c1562c9bf1ce374a7eab50880bc892ed04b8312be430e7ff02dd389f8f328f7"
     },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
-      "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
+      "address": "0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab",
+      "transactionHash": "0x7c1562c9bf1ce374a7eab50880bc892ed04b8312be430e7ff02dd389f8f328f7"
     },
     "1790045722949": {
       "events": {},
       "links": {},
       "address": "0xDb56f2e9369E0D7bD191099125a3f6C370F8ed15",
       "transactionHash": "0x01cbf6271548140a9496c10f4aa8abec1dfe9646a811d096ddffddc687bee571"
+    },
+    "1790054892092": {
+      "events": {},
+      "links": {},
+      "address": "0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab",
+      "transactionHash": "0x7c1562c9bf1ce374a7eab50880bc892ed04b8312be430e7ff02dd389f8f328f7"
     }
   },
-  "schemaVersion": "3.4.16",
-  "updatedAt": "2026-09-22T03:04:30.092Z",
+  "schemaVersion": "3.4.13",
+  "updatedAt": "2026-09-22T05:32:05.915Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Extends Stakeholder for farmer-specific functionality. Preserved interfaces (used by setup-app.js and ContractContext.js):  - registerFarmer(name, location, role, rawProducts)  - getFarmer(id) -> (stakeholder, string[])  - addRawProduct(rawProduct)  - getRawProductFarmers(rawProduct) -> address[]  - getRole(id)          (inherited from Stakeholder)  - isVerified(id)       (inherited)  - verify(id)           (inherited)  - getAddresses()       (inherited)  - get(id)              (inherited) Added for tests / new requirements:  - register() override (delegates to registerFarmer with empty rawProducts)  - verifyFarmer(id)    alias for verify() – keeps test compatibility  - getFarmersList()    alias for getAddresses()  - addFarmer()         alias for registerFarmer (test compatibility) Events:  - FarmerRegistered(id, name, location)  - FarmerRawProductAdded(farmer, rawProduct)",
